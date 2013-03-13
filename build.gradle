@@ -2,7 +2,7 @@ apply plugin: 'maven'
 apply plugin: 'idea'
 apply plugin: 'groovy'
 
-group 'org.codehaus.groovy'
+group 'com.bloomhealthco'
 version = '0.6'
 
 repositories {
@@ -20,4 +20,26 @@ dependencies {
     compile 'org.freehep:freehep-graphicsio-ps:2.1.2' 
     compile 'org.freehep:freehep-graphicsio-svg:2.1.2' 
     compile 'org.freehep:freehep-graphicsio-swf:2.1.2' 
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "${bloom_artifactory_contextUrl}/libs-release-local") {
+                authentication(
+                    userName: bloom_artifactory_username,
+                    password: bloom_artifactory_password
+                )
+            }
+        }
+    }
 }
